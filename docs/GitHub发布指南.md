@@ -58,7 +58,7 @@
 | `data\cache\*` | 测试用的临时图片 | ✅ 已排除 |
 | `study\日记改写-六级提升-01.md` | 你的日记原文精修稿，**而且用的是旧术语「网页处理区」** | ✅ 已排除 |
 | `tools\make-handwriting-fixture.py`<br>`tools\fixtures\handwriting-01.png` | 测试样张，**内容就是你的日记正文** | ✅ 已排除（你已决定不上传） |
-| `docs\dsh-plugin-api.md` 等 | 你自己的研究笔记，原先含 `C:\Users\sun\...` 这类绝对路径（会暴露 Windows 用户名） | ✅ 已脱敏为 `%USERPROFILE%`（30 处） |
+| `docs\dsh-plugin-api.md` 等 | 你自己的研究笔记，原先含 `C:\Users\<用户名>\...` 这类绝对路径（会暴露 Windows 用户名） | ✅ 已脱敏为 `%USERPROFILE%`（30 处） |
 | `docs\dsh-api\`（129 个文件） | **DSH 官方的包文档**，是从应用包里抄出来的，不是你的作品 | ✅ 已排除 |
 | `.dsh-asar\` | DSH 应用本体的解包副本 | ✅ 已排除 |
 
@@ -610,10 +610,10 @@ git push --force --all
 
 替换规则：
 
-- `C:\Users\sun\.dsh\...` → `%USERPROFILE%\.dsh\...`
-- `C:\Users\sun\AppData\Local\Temp\...` → `%TEMP%\...`
+- `C:\Users\<用户名>\.dsh\...` → `%USERPROFILE%\.dsh\...`
+- `C:\Users\<用户名>\AppData\Local\Temp\...` → `%TEMP%\...`
 
-笔记内容一个字都没有改动，只换了路径前缀。改完已实测：`tools\node.cmd --version` 仍正常输出 `v24.21.0`（`%USERPROFILE%` 在 cmd 里会正常展开）。全仓库复查确认再无 `Users\sun`。
+笔记内容一个字都没有改动，只换了路径前缀。改完已实测：`tools\node.cmd --version` 仍正常输出 `v24.21.0`（`%USERPROFILE%` 在 cmd 里会正常展开）。全仓库复查确认再无该 Windows 用户名。
 
 ### 你需要知道的一个副作用
 
