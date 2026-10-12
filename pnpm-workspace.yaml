@@ -8,4 +8,4 @@ packages:
 # esbuild (which spawns its platform binary with stdio: 'pipe') fail with EPERM.
 # The project is therefore deliberately BUILD-LESS: plain ESM JavaScript, no JSX,
 # no bundler. See PROJECT.md "Build-less decision".
-allowBuilds: { esbuild: set this to true or false }
+allowBuilds: { esbuild: false }
