@@ -615,6 +615,22 @@ git push --force --all
 
 笔记内容一个字都没有改动，只换了路径前缀。改完已实测：`tools\node.cmd --version` 仍正常输出 `v24.21.0`（`%USERPROFILE%` 在 cmd 里会正常展开）。全仓库复查确认再无该 Windows 用户名。
 
+### 公开后的复查（已完成一轮）
+
+仓库变成公开之后，还要确认「外面的人实际看到的东西」是干净的。**这一步只能你自己在 PowerShell 里跑** —— 我这边的沙箱连不上 GitHub（git 报 `schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS`，抓网页的工具直接拒绝解析 github.com），所以我改用「离线复核」来替代：先用 `git archive` 把**已经提交的内容**导出成一个干净目录，再让下面的脚本去检查那个目录。这样查的就是「将要被公开的那 63 个文件本身」，而不是工作区（工作区里还有被忽略的 `data\store.json`，查它没有意义）。
+
+检查脚本：`data\cache\verify-public.ps1`。放在 `data\cache\` 里是有意的 —— 那个目录本来就被 `.gitignore` 排除，脚本不会把工作区弄脏、也不会被推上去。
+
+这一轮查出 **3 项**，其中 1 项是真的：
+
+| 发现 | 判定 | 处理 |
+| --- | --- | --- |
+| 本文档第 61、613、614、616 行又原样写出了 `C:\Users\<用户名>\...` | **真的漏网** —— 我在解释「怎么脱敏」的时候把要藏的用户名重新贴了回去，而这份文档本身就在公开仓库里 | 改成 `C:\Users\<用户名>\...`，并删掉最后那句举例（提交 `ba3c215`） |
+| 本文档命中「非空 apiKey 字段」和「通用密钥形态」 | 误报 —— 它讲的就是怎么查密钥，正文里必须举出 `"apiKey": "…"`、`sk-`、`AKIA` 这些格式 | 在脚本里对**说明性文件**豁免这两类扫描 |
+| `tools\check-secrets.mjs` 命中同样两项 | 误报 —— 检查器本身的源码里就是那些正则 | 同上 |
+
+豁免只针对「密钥形态」类扫描，**Windows 用户名扫描不豁免**（这次真正的问题正是被它抓出来的）。最终一轮结果：63 个文件、0.727 MB，六组检查全部 `[OK]`。
+
 ### 你需要知道的一个副作用
 
 **识图测试跑不了了**：排除样张之后，`tools\probe-study-direct.mjs`、`tools\probe-study.mjs` 需要你自己准备一张「圈了生词的手写英文照片」才能跑。其余离线测试（`smoke-host`、`smoke-web`、`smoke-parse`、`check-*`）完全不受影响 —— 我在排除后重跑过，全部通过（`smoke-host` 142/142、`smoke-web` 91/91、`smoke-parse` 32/0、`check-modules` 25/25）。
@@ -633,3 +649,4 @@ git push --force --all
 | `tools\make-example-store.mjs` | 生成脱敏的 `data\store.example.json` |
 | `data\store.example.json` | 给别人看的空白数据样板（Key 为空） |
 | `docs\GitHub发布指南.md` | 就是本文 |
+| `data\cache\verify-public.ps1` | 公开后的复查脚本（**不提交** —— `data/cache/` 已在 `.gitignore` 里） |
