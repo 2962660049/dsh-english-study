@@ -12,13 +12,13 @@ Research performed from workspace `D:\dsh-English-study-workplace` (file policy:
 
 | Handle | Value |
 |---|---|
-| Bundled Node (v24.21.0) | `C:\Users\sun\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\node.exe` |
+| Bundled Node (v24.21.0) | `%USERPROFILE%\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\node.exe` |
 | asar reader | `D:\dsh-English-study-workplace\tools\asar-list.mjs` |
 | DSH archive | `D:\deepseek harness\resources\app.asar` (~122 MB) |
 | archive package prefix | `dsh/node_modules/@deepseek-ai/<pkg>/` |
 | unpacked natives | `D:\deepseek harness\resources\app.asar.unpacked\` |
 | CLI shim | `D:\deepseek harness\resources\runtime\cli\bin\dsh.cmd` |
-| active profile | `C:\Users\sun\.dsh\profiles\desktop\` |
+| active profile | `%USERPROFILE%\.dsh\profiles\desktop\` |
 | extraction root | `D:\dsh-English-study-workplace\.dsh-asar\` |
 
 `node` is **not** on `PATH`. Always use the absolute path above.
@@ -38,7 +38,7 @@ Research performed from workspace `D:\dsh-English-study-workplace` (file policy:
 ### 2.1 Earlier: dump every `@deepseek-ai/*/package.json` path (discovery pass)
 
 ```powershell
-$node="C:\Users\sun\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\node.exe"
+$node="%USERPROFILE%\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\node.exe"
 & $node "D:\dsh-English-study-workplace\tools\asar-list.mjs" `
     "D:\deepseek harness\resources\app.asar" list "dsh/node_modules/@deepseek-ai/.*/package\.json$" 400
 ```
@@ -49,7 +49,7 @@ runner packages worth extracting.
 ### 2.2 Bulk extraction (one directory per package)
 
 ```powershell
-$node="C:\Users\sun\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\node.exe"
+$node="%USERPROFILE%\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\node.exe"
 $tool="D:\dsh-English-study-workplace\tools\asar-list.mjs"
 $asar="D:\deepseek harness\resources\app.asar"
 $out="D:\dsh-English-study-workplace\.dsh-asar"
@@ -138,10 +138,10 @@ The only fully type-annotated material in the archive is the **generated catalog
 
 ### 4.2 Inside the installed example plugins (real `.d.ts`, hand-written/published)
 
-`C:\Users\sun\.dsh\profiles\desktop\node_modules\dsh-context\lib\index.d.ts` — **48 KB**, the smaller
+`%USERPROFILE%\.dsh\profiles\desktop\node_modules\dsh-context\lib\index.d.ts` — **48 KB**, the smaller
 and more readable published type surface for a complete plugin (host + client + config).
 
-`C:\Users\sun\.dsh\profiles\desktop\node_modules\dsh-better-sidebar\lib\types\**\*.d.ts` — **178 files**,
+`%USERPROFILE%\.dsh\profiles\desktop\node_modules\dsh-better-sidebar\lib\types\**\*.d.ts` — **178 files**,
 the richest published surface on this machine. Most valuable entries:
 
 | File | Why |
@@ -161,7 +161,7 @@ the richest published surface on this machine. Most valuable entries:
 `dsh-better-sidebar\src\client\**` — the **only** readable TypeScript sources of a real client plugin on
 this machine; useful for seeing the authoring form before compilation.
 
-`C:\Users\sun\.dsh\profiles\desktop\node_modules\dsh-image-gen\lib\types\**\*.d.ts` — the type surface
+`%USERPROFILE%\.dsh\profiles\desktop\node_modules\dsh-image-gen\lib\types\**\*.d.ts` — the type surface
 for the HTTP-route-heavy example.
 
 ---
@@ -217,7 +217,7 @@ Select-String -Path "...\dsh-image-gen\lib\client.js" -Pattern 'fetch\([^)]{0,40
 Recovering the bundle/market load model:
 
 ```powershell
-Select-String -Path "C:\Users\sun\.dsh\profiles\desktop\node_modules\dshmarket\**\*.js" `
+Select-String -Path "%USERPROFILE%\.dsh\profiles\desktop\node_modules\dshmarket\**\*.js" `
     -Pattern 'insert|bundles|dsh\.bundle|profile\.bundles'
 ```
 
@@ -228,7 +228,7 @@ Select-String -Path "C:\Users\sun\.dsh\profiles\desktop\node_modules\dshmarket\*
 1. **`Get-ChildItem -Recurse` over plugin `node_modules` returns nothing under the sandbox.**
    Non-recursive listing works. Enumerate **one directory level at a time**, or use the `glob` tool.
 2. **`dsh plugin --profile desktop --help` fails** with
-   `Error: EPERM: operation not permitted, open 'C:\Users\sun\.dsh\profiles\desktop\package.json.lock'`
+   `Error: EPERM: operation not permitted, open '%USERPROFILE%\.dsh\profiles\desktop\package.json.lock'`
    at `withFileLock` (`D:/deepseek harness/resources/app.asar/dsh/node_modules/@deepseek-ai/dsh-atomic-write/lib/index.js:195`)
    ← `runPlugin` (`.../dsh/lib/plugin-BGnVfe_D.js:90`) ← `runCli` (`.../dsh/lib/bin.js:236`)
    ← `runDesktopCli` (`.../dsh/node_modules/@deepseek-ai/dsh-desktop-host/lib/cli.js:93`).
@@ -257,7 +257,7 @@ Select-String -Path "C:\Users\sun\.dsh\profiles\desktop\node_modules\dshmarket\*
   a dev watcher (`pnpm run dev:web`) is running from the DSH checkout.
 - The profile currently **disables** the settings base plugin:
   `- id: ui-settings` + `name: "@deepseek-ai/dsh-client-ui-settings"` + `config: { enabled: false }`
-  in `C:\Users\sun\.dsh\profiles\desktop\cordis.patch.yml`. Settings slots may therefore be absent until
+  in `%USERPROFILE%\.dsh\profiles\desktop\cordis.patch.yml`. Settings slots may therefore be absent until
   it is re-enabled.
 - Profile-level `config` overrides observed in the same file, useful as real syntax examples:
   `- id: ui-settings-account` + `config: { version: 1, step: done, purpose: null, process: standard, completion: skipped, usage: compact, developerTools: false }`,
@@ -276,10 +276,10 @@ Select-String -Path "C:\Users\sun\.dsh\profiles\desktop\node_modules\dshmarket\*
 
 | Content | Path |
 |---|---|
-| 250 of 331 `dshmarket` lines matching `insert\|bundles\|dsh\.bundle\|profile\.bundles` | `C:\Users\sun\AppData\Local\Temp\dsh-spill-GWbKqQ\session-8c5125fdd266\09509ccd4299-grep-results.txt` |
-| `dsh-context\lib\client.js` matches for `/plugins/\|fetch(\|host.call\|remote.` | `C:\Users\sun\AppData\Local\Temp\dsh-spill-GWbKqQ\session-8c5125fdd266\7b6ed6c2a62b-grep.txt` |
-| `dsh-client-modules\README.md` matches for `export\|default\|module face\|apply\|name` | `C:\Users\sun\AppData\Local\Temp\dsh-spill-GWbKqQ\session-8c5125fdd266\e109937ffeb2-grep.txt` |
-| full `dsh-better-sidebar` `**/*.d.ts` listing (178 paths) | `C:\Users\sun\AppData\Local\Temp\dsh-spill-GWbKqQ\session-8c5125fdd266\18b6b31b7569-glob-results.txt` |
+| 250 of 331 `dshmarket` lines matching `insert\|bundles\|dsh\.bundle\|profile\.bundles` | `%TEMP%\dsh-spill-GWbKqQ\session-8c5125fdd266\09509ccd4299-grep-results.txt` |
+| `dsh-context\lib\client.js` matches for `/plugins/\|fetch(\|host.call\|remote.` | `%TEMP%\dsh-spill-GWbKqQ\session-8c5125fdd266\7b6ed6c2a62b-grep.txt` |
+| `dsh-client-modules\README.md` matches for `export\|default\|module face\|apply\|name` | `%TEMP%\dsh-spill-GWbKqQ\session-8c5125fdd266\e109937ffeb2-grep.txt` |
+| full `dsh-better-sidebar` `**/*.d.ts` listing (178 paths) | `%TEMP%\dsh-spill-GWbKqQ\session-8c5125fdd266\18b6b31b7569-glob-results.txt` |
 
 These are session-temp files and may be cleaned up; every fact drawn from them is already recorded in
 `dsh-plugin-api.md` or above.

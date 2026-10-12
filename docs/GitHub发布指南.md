@@ -58,7 +58,7 @@
 | `data\cache\*` | 测试用的临时图片 | ✅ 已排除 |
 | `study\日记改写-六级提升-01.md` | 你的日记原文精修稿，**而且用的是旧术语「网页处理区」** | ✅ 已排除 |
 | `tools\make-handwriting-fixture.py`<br>`tools\fixtures\handwriting-01.png` | 测试样张，**内容就是你的日记正文** | ✅ 已排除（你已决定不上传） |
-| `docs\dsh-plugin-api.md` 等 | 你自己的研究笔记，但里面出现 `C:\Users\sun\...` 这类绝对路径（会暴露你的 Windows 用户名） | ⚠️ **默认保留**，见 §十六 |
+| `docs\dsh-plugin-api.md` 等 | 你自己的研究笔记，原先含 `C:\Users\sun\...` 这类绝对路径（会暴露 Windows 用户名） | ✅ 已脱敏为 `%USERPROFILE%`（30 处） |
 | `docs\dsh-api\`（129 个文件） | **DSH 官方的包文档**，是从应用包里抄出来的，不是你的作品 | ✅ 已排除 |
 | `.dsh-asar\` | DSH 应用本体的解包副本 | ✅ 已排除 |
 
@@ -589,21 +589,35 @@ git push --force --all
 
 ---
 
-## 十六、三项决定（已按你的选择执行）
+## 十六、三项决定与公开前的脱敏（已全部执行）
 
-| 决定 | 你的选择 | 我做了什么 |
+| 决定 | 你的选择 | 实际做了什么 |
 | --- | --- | --- |
-| 仓库公开还是私有 | **先私有，验证无误后再公开** | §九 建仓库时选 **Private**；确认没问题后在 Settings → General → Danger Zone → Change visibility 改成 Public |
+| 仓库公开还是私有 | **先私有，验证后再公开** | 建仓库时选 **Private**；验收通过后改为公开 |
 | 那两个含日记正文的测试样张 | **不上传** | `.gitignore` 第 55–56 行加了 `tools/make-handwriting-fixture.py` 和 `tools/fixtures/`，两者已确认被忽略 |
 | 开源协议 | **加 MIT** | 新建了 `LICENSE`（MIT，版权人 `孙文康`） |
+
+### 公开前的脱敏（已做）
+
+准备从私有改成公开时，把「绝对路径里的 Windows 用户名」统一换成了环境变量，**共 30 处**：
+
+| 文件 | 替换处数 |
+| --- | --- |
+| `docs\dsh-plugin-api.md` | 13 |
+| `docs\dsh-plugin-api-notes.md` | 14 |
+| `tools\node.cmd` | 1 |
+| `tools\pnpm.cmd` | 2 |
+
+替换规则：
+
+- `C:\Users\sun\.dsh\...` → `%USERPROFILE%\.dsh\...`
+- `C:\Users\sun\AppData\Local\Temp\...` → `%TEMP%\...`
+
+笔记内容一个字都没有改动，只换了路径前缀。改完已实测：`tools\node.cmd --version` 仍正常输出 `v24.21.0`（`%USERPROFILE%` 在 cmd 里会正常展开）。全仓库复查确认再无 `Users\sun`。
 
 ### 你需要知道的一个副作用
 
 **识图测试跑不了了**：排除样张之后，`tools\probe-study-direct.mjs`、`tools\probe-study.mjs` 需要你自己准备一张「圈了生词的手写英文照片」才能跑。其余离线测试（`smoke-host`、`smoke-web`、`smoke-parse`、`check-*`）完全不受影响 —— 我在排除后重跑过，全部通过（`smoke-host` 142/142、`smoke-web` 91/91、`smoke-parse` 32/0、`check-modules` 25/25）。
-
-### 还剩一件可选事项
-
-`docs\dsh-plugin-api.md` 和 `docs\dsh-plugin-api-notes.md` 是你自己的研究笔记，里面写了 `C:\Users\sun\.dsh\...` 这样的绝对路径，会暴露你的 Windows 用户名。**等你准备把仓库从私有改成公开之前**，可以让我把这些路径统一替换成 `%USERPROFILE%\.dsh\...`，笔记内容一个字都不用动。现在私有状态下不着急。
 
 ---
 

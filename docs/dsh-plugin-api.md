@@ -9,14 +9,14 @@ Primary evidence sources (three tiers, in order of trust):
 | Tier | Source | Why |
 |---|---|---|
 | 1 | `D:\dsh-English-study-workplace\.dsh-asar\<pkg>\lib\index.js` + `README.md` | Extracted verbatim from `D:\deepseek harness\resources\app.asar` under prefix `dsh/node_modules/@deepseek-ai/<pkg>/` — the shipped implementation. |
-| 2 | `C:\Users\sun\.dsh\profiles\desktop\node_modules\{dsh-context,dsh-image-gen,dsh-better-sidebar}\` | Installed, working, third-party plugins. Real end-to-end usage. |
+| 2 | `%USERPROFILE%\.dsh\profiles\desktop\node_modules\{dsh-context,dsh-image-gen,dsh-better-sidebar}\` | Installed, working, third-party plugins. Real end-to-end usage. |
 | 3 | `D:\dsh-English-study-workplace\.dsh-asar\dsh-cordis-client-runner\lib\client.js` | Machine-generated, complete client-side API catalogue (services, events, types, all 89 slots). |
 
 Extraction recipe used for everything under `.dsh-asar` (per-package output dir is **mandatory** —
 `extract` strips the prefix, so two packages into one dir overwrite each other):
 
 ```powershell
-$node = "C:\Users\sun\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\node.exe"
+$node = "%USERPROFILE%\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\node.exe"
 & $node "D:\dsh-English-study-workplace\tools\asar-list.mjs" `
     "D:\deepseek harness\resources\app.asar" `
     extract "dsh/node_modules/@deepseek-ai/dsh-tools/" `
@@ -55,7 +55,7 @@ dsh-my-plugin/
 
 ### 1.1 `package.json` — the `dsh` field
 
-Ground truth: `C:\Users\sun\.dsh\profiles\desktop\node_modules\dsh-context\package.json` (158 lines, read in full).
+Ground truth: `%USERPROFILE%\.dsh\profiles\desktop\node_modules\dsh-context\package.json` (158 lines, read in full).
 
 ```jsonc
 {
@@ -178,9 +178,9 @@ A patch file is a **top-level YAML array**. Other row kinds (`dshmarket\lib\patc
 | Channel | Requirement | Where the mount lives |
 |---|---|---|
 | **BUNDLE** (preferred) | package declares `dsh.bundle.patch` **and** is listed in the profile's `dsh.profile.bundles` | the patch file is applied as a layer; nothing manual |
-| **MANUAL ENTRY** | nothing special | you add your own `- insert:` row (and/or `- id:` override) to `C:\Users\sun\.dsh\profiles\desktop\cordis.patch.yml` |
+| **MANUAL ENTRY** | nothing special | you add your own `- insert:` row (and/or `- id:` override) to `%USERPROFILE%\.dsh\profiles\desktop\cordis.patch.yml` |
 
-Profile manifest, `C:\Users\sun\.dsh\profiles\desktop\package.json`:
+Profile manifest, `%USERPROFILE%\.dsh\profiles\desktop\package.json`:
 
 ```jsonc
 "dsh": {
@@ -204,7 +204,7 @@ Profile manifest, `C:\Users\sun\.dsh\profiles\desktop\package.json`:
   are reorderable (`dshmarket\lib\order.js:6,19`). A bundle may declare
   `dsh.bundle.order.{before,after}` — "a list of bundle package names" (`dshmarket\lib\order.js:85`).
 - The profile patch layer is documented in its own header comment
-  (`C:\Users\sun\.dsh\profiles\desktop\cordis.patch.yml`): *"Your patch layer for this dsh profile,
+  (`%USERPROFILE%\.dsh\profiles\desktop\cordis.patch.yml`): *"Your patch layer for this dsh profile,
   applied after every bundle layer: a top-level YAML array of loader patch entries (id-targeted config
   overrides, disables, and insert lists; `!!js` expressions allowed)."*
 
@@ -1309,7 +1309,7 @@ Git-hosted plugins build via `prepare`, blocked by pnpm until allowed under `all
 `<profileDir>/pnpm-workspace.yaml` (`:97`).
 
 > **Environment limit (this machine, this session):** `dsh plugin --profile desktop --help` fails with
-> `EPERM: operation not permitted, open 'C:\Users\sun\.dsh\profiles\desktop\package.json.lock'`
+> `EPERM: operation not permitted, open '%USERPROFILE%\.dsh\profiles\desktop\package.json.lock'`
 > (`dsh-atomic-write\lib\index.js:195` `withFileLock`, reached via `dsh-plugin-manager`). The profile
 > directory is outside the workspace sandbox. Run these commands from an unrestricted terminal. The
 > live `--help` text is therefore **UNKNOWN**; the subcommands above are read from the implementation.
@@ -1487,7 +1487,7 @@ export { apply, inject, name };
 ### Install
 
 ```powershell
-# copy the package into C:\Users\sun\.dsh\profiles\desktop\node_modules\dsh-hello
+# copy the package into %USERPROFILE%\.dsh\profiles\desktop\node_modules\dsh-hello
 & "D:\deepseek harness\resources\runtime\cli\bin\dsh.cmd" plugin --profile desktop add dsh-hello
 # then restart the app
 ```
@@ -1505,7 +1505,7 @@ export { apply, inject, name };
 | 5 | Exhaustive `dsh-client-ui-primitives` export list | The 6 650-char export statement was not captured in full; only head, tail and spot-checked middle names. |
 | 6 | Whether a plugin can define its **own** `Remote` namespace | No installed example does; only shared namespaces (`settings`, `credentials`, `commands`, …) were observed. Use your own HTTP route instead. |
 | 7 | Whether `watch.sh` / `web.sh` / `register.sh` exist in a DSH source checkout | `dsh-context\package.json` references them, but they are **not shipped** in any tarball on this machine. |
-| 8 | Live `dsh plugin --help` text | Command fails with `EPERM` on `C:\Users\sun\.dsh\profiles\desktop\package.json.lock` under this session's sandbox. |
+| 8 | Live `dsh plugin --help` text | Command fails with `EPERM` on `%USERPROFILE%\.dsh\profiles\desktop\package.json.lock` under this session's sandbox. |
 | 9 | Exact return contract of `output.render(args, value)` | Only that it must be a function (validated in `dsh-tools\lib\index.js:2878-2887`). |
 | 10 | Exact semantics of `dsh.client.inject` beyond "the bundle graph row's inject list (other client plugin package names)" | The row field is read at `dsh-client-modules\lib\index.js:400`, but its consumer semantics were not traced further. |
 
@@ -1534,7 +1534,7 @@ Everything else in this document was read from source at the cited path.
 | Host HMR | `.dsh-asar\dsh-hmr\README.md` |
 | Plugin manager, disable form, version exemptions | `.dsh-asar\dsh-plugin-manager\README.md` |
 | CLI | `.dsh-asar\dsh-cli\BGnVfe_D.js` |
-| Market bundle ordering / hot-mount / patch parsing | `C:\Users\sun\.dsh\profiles\desktop\node_modules\dshmarket\lib\{order,hot,patch,check}.js` |
-| Real host+client plugin | `C:\Users\sun\.dsh\profiles\desktop\node_modules\dsh-context\` |
-| Real plugin with HTTP routes + tools + LLM images | `C:\Users\sun\.dsh\profiles\desktop\node_modules\dsh-image-gen\` |
-| Real plugin with TypeScript sources + install scripts | `C:\Users\sun\.dsh\profiles\desktop\node_modules\dsh-better-sidebar\` |
+| Market bundle ordering / hot-mount / patch parsing | `%USERPROFILE%\.dsh\profiles\desktop\node_modules\dshmarket\lib\{order,hot,patch,check}.js` |
+| Real host+client plugin | `%USERPROFILE%\.dsh\profiles\desktop\node_modules\dsh-context\` |
+| Real plugin with HTTP routes + tools + LLM images | `%USERPROFILE%\.dsh\profiles\desktop\node_modules\dsh-image-gen\` |
+| Real plugin with TypeScript sources + install scripts | `%USERPROFILE%\.dsh\profiles\desktop\node_modules\dsh-better-sidebar\` |
