@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>英语学习小助手</title>
+<link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <!-- The whole shell is rendered by js/app.js. The static markup here is only a
+       first-paint placeholder and the mount point for the error boundary. -->
+  <div id="root">
+    <div class="boot-splash">
+      <div class="boot-mark">英</div>
+      <p>正在加载英语学习小助手…</p>
+    </div>
+  </div>
+  <div id="toast-layer" class="toast-layer" aria-live="polite" aria-atomic="false"></div>
+  <div id="modal-layer" class="modal-layer" hidden></div>
+  <noscript>
+    <p style="padding:24px;font-family:system-ui">英语学习小助手需要启用 JavaScript 才能运行。</p>
+  </noscript>
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

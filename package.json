@@ -1,0 +1,17 @@
+{
+  "name": "dsh-english-study-workplace",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Workspace for the English-study-assistant DSH plugin: photo diary OCR/translation, word annotation, vocabulary bank.",
+  "packageManager": "pnpm@11.7.0",
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "scripts": {
+    "check": "node tools/check-env.mjs",
+    "test": "pnpm -r --if-present test",
+    "build": "pnpm -r --if-present build"
+  },
+  "devDependencies": {}
+}

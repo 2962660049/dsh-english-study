@@ -1,0 +1,20 @@
+# 统一换行符，避免 Windows / macOS / Linux 之间整文件「假改动」。
+# 仓库里一律存 LF，检出时按平台还原。
+* text=auto eol=lf
+
+# Windows 的批处理和 PowerShell 脚本必须是 CRLF，否则可能不执行
+*.cmd text eol=crlf
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# 二进制文件：不要做任何换行转换，也不要尝试显示 diff
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.ico binary
+*.zip binary
+
+# 这些文件在 GitHub 上按二进制/不统计语言处理
+pnpm-lock.yaml linguist-generated=true

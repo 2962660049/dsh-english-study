@@ -1,0 +1,75 @@
+# =============================================================================
+#  .gitignore  —  这个文件决定「哪些东西永远不会被 Git 收进去」
+#
+#  ⚠️ 最重要的一条：data/store.json 里存着你的智谱 API Key 和你的日记内容。
+#     它必须永远留在这份名单里。删掉下面这一行 = 你的 Key 会被推到 GitHub。
+# =============================================================================
+
+# ---- 密钥与个人数据：绝对不提交 -------------------------------------------
+data/store.json
+data/store.local.json
+data/*.corrupt-*
+data/*.corrupt-*.json
+.env
+.env.*
+*.key
+*.pem
+secrets*.json
+credentials*.json
+
+# ---- 运行时数据（照片、缓存、日志） ---------------------------------------
+data/images/*
+!data/images/.gitkeep
+data/cache/*
+!data/cache/.gitkeep
+data/diary/*
+!data/diary/.gitkeep
+
+# 离线词典 63 MB：不进仓库，用 tools/fetch-ecdict.mjs 下载
+data/dictionary/*.csv
+data/dictionary/*.partial
+!data/dictionary/.gitkeep
+
+# ---- 第三方内容，不属于你的作品，不能转载 ---------------------------------
+# docs/dsh-api/ 是从 DSH 应用包里抄出来的官方包文档（@deepseek-ai/dsh-*），
+# 属于 DeepSeek Harness 自己的产品资料，不是本项目的内容。
+docs/dsh-api/
+# DSH 应用本体的解包副本
+.dsh-asar/
+
+# ---- 打包快照（是 packages/ 的副本，不是源码） ---------------------------
+version1.0/
+
+# ---- 已作废的旧设计稿 -----------------------------------------------------
+docs/PROJECT-v1-归档.md
+
+# ---- 我个人学习用的材料（含我的日记原文，且用的是旧术语） -----------------
+study/
+
+# ---- 测试样张里含我日记的英文原文 -----------------------------------------
+# tools/make-handwriting-fixture.py 把日记原文写死在脚本里，
+# tools/fixtures/handwriting-01.png 是它渲染出来的样张。
+# 两份都含真实日记内容，所以不进仓库。
+# 影响：clone 之后 tools/probe-study*.mjs 需要自己准备一张手写图片才能跑，
+#       其余离线测试（smoke-*、check-*）不受影响。
+tools/make-handwriting-fixture.py
+tools/fixtures/
+
+# ---- 依赖与包管理器缓存 ---------------------------------------------------
+node_modules/
+**/node_modules/
+.pnpm-store/
+
+# ---- 编辑器 / 操作系统杂项 ------------------------------------------------
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# ---- 本地临时脚本（下划线开头的都是用完即删的排查脚本） -------------------
+tools/_*.mjs

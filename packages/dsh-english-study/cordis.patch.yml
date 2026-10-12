@@ -1,0 +1,10 @@
+# Bundle patch layer for dsh-english-study.
+#
+# The row loads this package's main entry (lib/index.js) as the host half — a plain
+# Cordis plugin that owns the HTTP routes and durable storage for the study app.
+# The `dsh.client` declaration in package.json makes the web app additionally load
+# the ./client bundle (lib/client.js) as the browser half, which mounts the panel
+# into the root 'main' slot and the launcher into 'shell.overlay'.
+- insert:
+    - id: dsh-english-study
+      name: dsh-english-study

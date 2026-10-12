@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "createdAt": "1970-01-01T00:00:00.000Z",
+  "updatedAt": "1970-01-01T00:00:00.000Z",
+  "diary": [],
+  "vocabEvents": [],
+  "vocabWords": [],
+  "settings": {
+    "activeProvider": "glm",
+    "credentials": {
+      "glm": {
+        "apiKey": ""
+      }
+    }
+  },
+  "ledger": []
+}
